@@ -1,0 +1,41 @@
+plugins {
+	id 'org.springframework.boot' version '3.3.0'
+	id 'io.spring.dependency-management' version '1.1.5'
+	id 'java'
+	id 'org.graalvm.buildtools.native' version '0.10.2'
+}
+
+group = 'com.polarbookshop'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+description = 'Provides quotes from the books in the library.'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+tasks.named('bootBuildImage') {
+	builder = 'docker.io/paketobuildpacks/builder-jammy-tiny'
+	environment = ['BP_NATIVE_IMAGE': 'true']
+	imageName = "${project.name}"
+
+	docker {
+		publishRegistry {
+			username = "antony83"
+			password = "dckr_pat_h8bnPdixkcCjXLTAYJ00kRcKI3Q"
+			url = "https://hub.docker.com/repositories/antony83"
+		}
+	}
+}
